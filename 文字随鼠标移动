@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mousemove</title>
+</head>
+<body>
+</body>
+<script>
+    function getbyclass(classname) {
+        return document.getElementsByClassName(classname);
+    }
+    var body = document.getElementsByTagName('body')[0];
+    var massage = "哈哈哈哦哦哦呵呵呵呦呦呦小李子喳";
+    massage = massage.split("");
+    var step = 30;//字间距
+    var x, y;//鼠标位置
+    var directX;//鼠标移动方向
+    var e = e || window.event;
+    //鼠标位置获取并判断移动方向
+    document.onmousemove=function(e){
+        if (x < e.pageX) {
+            directX = 'right';
+        } else {
+            directX = 'left';
+        }
+        x = e.pageX;
+        y = e.pageY;
+    };
+    document.ontouchmove=function(e){
+        if (x < e.pageX) {
+            directX = 'right';
+        } else {
+            directX = 'left';
+        }
+        x = e.pageX;
+        y = e.pageY;
+    };
+
+    //创建多个span元素
+    for (var i = 0, l = massage.length; i < l; i++) {
+        var span = document.createElement("span");
+        body.appendChild(span);
+        span.innerText = massage[i];
+        span.setAttribute('class', 'fontbox');
+    }
+    var fontbox = getbyclass('fontbox');
+
+    //文字定位
+    var fontbox_index = 0;
+    function startPosition() {
+        while (fontbox_index < fontbox.length) {
+            fontbox[fontbox_index].style.position = 'absolute';
+            fontbox[fontbox_index].style.top = y + 'px';
+            switch (directX){
+                case 'right':
+                    fontbox[fontbox_index].style.left = x - step * (fontbox.length - fontbox_index) + 'px';
+                    break;
+                default:
+                    fontbox[fontbox_index].style.left = x + step * (fontbox.length - fontbox_index) + 'px';
+                    break;
+            }
+            fontbox[fontbox_index].style.color = "rgb(" + parseInt(Math.random() * 255) + ',' + parseInt(Math.random() * 255) + ',' + parseInt(Math.random() * 255) + ')';
+
+            fontbox_index++;
+            return;
+        }
+        fontbox_index = 0;
+    }
+    //刷新位置显示
+    function flush() {
+        startPosition();
+        setTimeout(flush, 14);
+    }
+    flush();
+    //文字隐藏和显示
+    for (var i = 0, l = fontbox.length; i < l; i++) {
+        getbyclass('fontbox')[i].style.display = 'none';
+    }
+    document.onmouseover = function () {
+        for (var i = 0, l = fontbox.length; i < l; i++) {
+            fontbox[i].style.display = 'block';
+        }
+    }
+</script>
+</html>
